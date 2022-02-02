@@ -1,0 +1,138 @@
+{% load static %}
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="#" class="brand-link">
+        <img src="{% static 'registeration/adminlte/dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo"
+             class="brand-image img-circle elevation-3"
+             style="opacity: .8">
+        <span class="brand-text font-weight-light">EG portal</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="{% static 'registeration/adminlte/dist/img/user2-160x160.jpg' %}"
+                     class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a href="#" class="d-block">{{ user.get_full_name }}</a>
+            </div>
+        </div>
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                data-accordion="false">
+                {% if user.is_superuser or user.is_author %}
+                    <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'product_create' %}menu-open{% elif request.resolver_match.url_name == 'dashboard' %}menu-open{% endif %}">
+                        <a href="#"
+                           class="nav-link {% if request.resolver_match.url_name == 'product_create' %}active{% elif request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                            <i class="nav-icon fa fa-th"></i>
+                            <p>
+                                محصولات
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'account:dashboard' %}"
+                                   class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                                    <i class="fa fa-list nav-icon"></i>
+                                    <p>لیست محصولات</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'account:product_create' %}"
+                                   class="nav-link {% if request.resolver_match.url_name == 'product_create' %}active{% endif %}">
+                                    <i class="fa fa-edit nav-icon"></i>
+                                    <p>افزودن محصول جدید</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'category_create' %}menu-open{% elif request.resolver_match.url_name == 'category' %}menu-open{% endif %} ">
+                        <a href="#"
+                           class="nav-link {% if request.resolver_match.url_name == 'category_create' %}active{% elif request.resolver_match.url_name == 'category' %}active{% endif %}">
+                            <i class="nav-icon fas fa-table"></i>
+                            <p>
+                                دسته‌بندی‌ها
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'account:category' %}"
+                                   class="nav-link {% if request.resolver_match.url_name == 'category' %}active{% endif %}">
+                                    <i class="fa fa-list-alt nav-icon"></i>
+                                    <p>لیست دسته‌بندی‌ها</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'account:category_create' %}"
+                                   class="nav-link {% if request.resolver_match.url_name == 'category_create' %}active{% endif %}">
+                                    <i class="fa fa-edit nav-icon"></i>
+                                    <p>افزودن دسته‌بندی جدید</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'collection_create' %}menu-open{% elif request.resolver_match.url_name == 'collection' %}menu-open{% endif %} ">
+                        <a href="#"
+                           class="nav-link {% if request.resolver_match.url_name == 'collection_create' %}active{% elif request.resolver_match.url_name == 'collection' %}active{% endif %}">
+                            <i class="nav-icon fas fa-table"></i>
+                            <p>
+کالکشن‌ها
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'account:collection' %}"
+                                   class="nav-link {% if request.resolver_match.url_name == 'collection' %}active{% endif %}">
+                                    <i class="fa fa-list-alt nav-icon"></i>
+                                    <p>لیست کالکشن‌ها</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'account:collection_create' %}"
+                                   class="nav-link {% if request.resolver_match.url_name == 'collection_create' %}active{% endif %}">
+                                    <i class="fa fa-edit nav-icon"></i>
+                                    <p>افزودن کالکشن‌ جدید</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                {% endif %}
+                <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'profile' %}menu-open{% elif request.resolver_match.url_name == 'password_change' %}menu-open{% endif %} ">
+                    <a href="#"
+                       class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% elif request.resolver_match.url_name == 'password_change' %}active{% endif %}">
+                        <i class="nav-icon fa fa-user-alt"></i>
+                        <p>
+                            پروفایل
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'account:profile' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+                                <i class="fa fa-user-edit nav-icon"></i>
+                                <p>ویرایش پروفایل</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'password_change' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'password_change' %}active{% endif %}">
+                                <i class="fa fa-key nav-icon"></i>
+                                <p>تغییر رمز عبور</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>

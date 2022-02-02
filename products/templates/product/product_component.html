@@ -1,0 +1,23 @@
+{% load thumbnail %}
+<div class="col-sm-4 pull-right">
+    <div class="product-image-wrapper">
+        <div class="single-products">
+            <div class="productinfo text-center">
+                {% thumbnail item.image "250x140" crop="center" as im %}
+                    <img src="{{ im.url }}" width="{{ im.width }}"
+                         height="{{ im.height }}">
+                {% endthumbnail %}
+                <a href="{% url 'product:product_detail' item.id item.slug %}">
+                        <h2>{{ item.title }}</h2></a>
+                <p>{{ item.description|truncatewords:5|safe }}</p>
+            </div>
+        </div>
+        <div class="choose">
+            <ul class="nav nav-pills nav-justified">
+                <li><a href="{% url 'product:product_detail' item.id item.slug %}"><i class="fa fa-plus-square"></i>نمایش
+                    محصول</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

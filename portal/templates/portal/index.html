@@ -1,0 +1,42 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+    <section class="section site-portfolio">
+        {% if user.is_authenticated %}
+            <div class="container ">
+            <div id="portfolio-grid" class="row no-gutter" data-aos="fade-up" data-aos-delay="200">
+            <div class="item web col-sm-6 col-md-4 col-lg-4 rtl mb-4">
+                <a href="{% url 'product:product_list' %}" class="item-wrap fancybox">
+                    <div class="work-info">
+                        <h3>همه</h3>
+                    </div>
+                    <img class="img-fluid img-card" src="{% static 'images/category/all_products.jpg' %}">
+                </a>
+            </div>
+            {% for cat in object_list %}
+                <div class="item web col-sm-6 col-md-4 col-lg-4 rtl mb-4">
+                    <a href="{% url 'portal:category' cat.slug %}" class="item-wrap fancybox">
+                        <div class="work-info">
+                            <h3>{{ cat.title }}</h3>
+                        </div>
+                        <img class="img-fluid img-card" src="{{ cat.image.url }}">
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-lg-6 mx-auto">
+                <div class="card card-danger">
+                    <div class="card-header bg-danger ">
+                        <h3 class="card-title text-light mb-0 float-left">EG STYLE</h3>
+                    </div>
+                    <div class="card-body">
+                            <p>برای دیدن محتواهای سایت باید وارد شوید</p>
+                        <a class="btn btn-outline-danger" href="{% url 'login' %}">ورود به سایت</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'registration/base.html' %}
+{% block title_meta %}{% block title %}لیست کالکشن ها{% endblock %}{% endblock %}
+{% block main %}
+    <div class="col-lg-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title mb-0 float-left">EG STYLE</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>عنوان</th>
+                        <th>شناسه</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in object_list %}
+                        <tr>
+                            <td>{{ obj.title }}</td>
+                            <td>{{ obj.slug }}</td>
+{#                            <td><span class="tag tag-success">#}
+{#                                    {% if user.is_superuser %}#}
+{#                                        <li class="list-inline"><a class="btn btn-danger mb-1"#}
+{#                                                                   href="{% url 'account:collection_delete' obj.pk %}">حذف#}
+{#                                                                            کالکشن</a></li>#}
+{#                                    {% endif %}#}
+{#                                </span></td>#}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

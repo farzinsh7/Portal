@@ -1,0 +1,64 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+    <section class="section site-portfolio">
+        {% if user.is_authenticated %}
+            <div class="row">
+                <div class="container">
+                    <div class="col-sm-9  padding-right">
+                        <div class="product-details"><!--product-details-->
+                            <div class="col-sm-5">
+                                <div class="view-product">
+                                    <img src="{{ product.image.url }}" alt="">
+                                    <a href="{{ product.image.url }}"><h3>بزرگنمایـی</h3></a>
+                                </div>
+                            </div>
+                            <div class="col-sm-7">
+                                <div class="product-information"><!--/product-information-->
+                                    <img src="{% static 'images/product-details/new.png' %}" class="newarrival" alt="">
+                                    <div>
+                                        <h2>{{ product.title }}</h2>
+                                        <p>شناسـه : {{ product.title }}</p>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <p><b>تعداد قطعات : </b> {{ product.parts }}</p>
+                                            <p><b>دسته بندی : </b> {{ product.category_to_str}}</p>
+                                            <p><b>طراح : </b> {{ product.author.get_full_name }}</p>
+                                            <p><b>رنگ : </b> {{ product.color }}</p>
+                                            <p><b>تکنیک : </b> {{ product.technique }}</p>
+                                        </div>
+                                        <span>
+                                            <form action="{% url 'order:new-order' %}" method="post">
+                                                {% csrf_token %}
+                                                {{ new_order.product_id }}
+                                                {{ new_order.count }}
+                                                <button type="submit" class="btn btn-fefault cart">
+                                                    <i class="fa fa-shopping-cart"></i>
+                                                    افـزودن به سبـد خریـد
+                                                </button>
+                                            </form>
+                                        </span>
+                                    </div>
+                                </div><!--/product-information-->
+                            </div>
+                        </div><!--/product-details-->
+                    </div>
+                    {% include 'product/cat_component.html' %}
+                </div>
+            </div>
+        {% else %}
+            <div class="col-lg-6 mx-auto">
+                <div class="card card-danger">
+                    <div class="card-header bg-danger ">
+                        <h3 class="card-title text-light mb-0 float-left">EG STYLE</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>برای دیدن محتواهای سایت باید وارد شوید</p>
+                        <a class="btn btn-outline-danger" href="{% url 'account:login' %}">ورود به سایت</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

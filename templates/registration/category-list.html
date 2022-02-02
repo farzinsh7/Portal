@@ -1,0 +1,42 @@
+{% extends 'registration/base.html' %}
+{% block title_meta %}{% block title %}لیست دسته‌بندی{% endblock %}{% endblock %}
+{% block main %}
+    <div class="col-lg-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title mb-0 float-left">EG STYLE</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>عنوان</th>
+                        <th>آدرس (url)</th>
+                        <th>وضعیت</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in object_list %}
+                        <tr>
+                            <td>{{ obj.title }}</td>
+                            <td>{{ obj.slug }}</td>
+                            <td><span class="tag tag-success">
+                                    {% if obj.status == True %}
+                                        <span class="right badge badge-success">منتشر شده</span>
+                                    {% else %}
+                                        <span class="right badge badge-danger">پیش نویس</span>
+                                    {% endif %}
+{#                                    {% if user.is_superuser %}#}
+{#                                <li class="list-inline"><a class="btn btn-danger mb-1"#}
+{#                                                           href="{% url 'account:category_delete' obj.pk %}">حذف#}
+{#                                    دسته‌بندی</a></li>#}
+{#                            {% endif %}#}
+                                </span></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

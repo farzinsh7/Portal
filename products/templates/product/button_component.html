@@ -1,0 +1,10 @@
+<form action="{% url 'order:new-order' %}" method="post">
+    {% csrf_token %}
+                                                <label>تعداد :</label>
+    {{ new_order.product_id }}
+    {{ new_order.count }}
+    <button type="submit" class="btn btn-fefault cart">
+        <i class="fa fa-shopping-cart"></i>
+        افـزودن به سبـد خریـد
+    </button>
+</form>

@@ -1,0 +1,80 @@
+{% extends 'registration/base.html' %}
+{% load thumbnail %}
+{% block title_meta %}{% block title %}لیست محصولات{% endblock %}{% endblock %}
+{% block main %}
+    <div class="row">
+        <div class="col-12">
+            {% if object_list %}
+                <div class="card">
+                    <!-- /.card-header -->
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th class="table-header">عنوان</th>
+                                <th class="table-header">طراح</th>
+                                <th class="table-header">تعداد قطعات</th>
+                                <th class="table-header">تصویر محصول</th>
+                                <th class="table-header">تاریخ انتشار</th>
+                                <th class="table-header">دسته بندی</th>
+                                <th class="table-header">کالکشن(شناسه)</th>
+                                <th class="table-header">توضیحات</th>
+                                <th class="table-header">وضعیت</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for obj in object_list %}
+                                <tr>
+                                    <td>{{ obj.title }}</td>
+                                    <td>{{ obj.author.get_full_name }}</td>
+                                    <td>{{ obj.parts }}</td>
+                                    <td>
+                                        {% thumbnail obj.image "110x110" crop="center" as im %}
+                                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                                        {% endthumbnail %}
+                                    </td>
+                                    <td>{{ obj.j_publish }}</td>
+                                    <td>{{ obj.category_to_str }}</td>
+                                    <td>{{ obj.collection_to_str }}</td>
+                                    <td>{{ obj.description|striptags|truncatewords:10 }}</td>
+                                    <td><span class="tag tag-success">
+                                    {% if obj.status == 'p' %}
+                                        <span class="right badge badge-success ">منتشر شده</span>
+                                        <ul class="list-group">
+                                            <li class="list-inline"><a class="btn btn-info mb-1" target="_blank"
+                                                                       href="{% url 'product:product_detail' obj.id obj.slug %}">نمایش محصول</a></li>
+                                            <li class="list-inline"><a class="btn btn-warning mb-1"
+                                                                       href="{% url 'account:product_update' obj.pk %}">ویرایش محصول</a></li>
+                                            {% if user.is_superuser %}
+                                                <li class="list-inline"><a class="btn btn-danger mb-1"
+                                                                           href="{% url 'account:product_delete' obj.pk %}">حذف محصول</a></li>
+                                            {% endif %}
+                                        </ul>
+                                    {% else %}
+                                        <span class="right badge badge-danger">پیش نویس</span>
+                                        <ul class="list-group">
+                                        <li class="list-inline"><a class="btn btn-secondary mb-1" target="_blank"
+                                                                   href="{% url 'product:product_preview' obj.pk %}">پیش‌نمایش محصول</a></li>
+                                        <li class="list-inline"><a class="btn btn-warning mb-1" target="_blank"
+                                                                   href="{% url 'account:product_update' obj.pk %}">ویرایش محصول</a></li>
+                                        </ul>
+                                        {% if user.is_superuser %}
+                                            <li class="list-inline"><a class="btn btn-danger mb-1"
+                                                                       href="{% url 'account:product_delete' obj.pk %}">حذف محصول</a></li>
+                                        {% endif %}
+                                    {% endif %}
+                                </span></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            {% else %}
+                <h3 class="text-info">محتوایی برای نمایش وجود ندارد!!!</h3>
+            {% endif %}
+            <!-- /.card -->
+        </div>
+    </div>
+{% endblock %}

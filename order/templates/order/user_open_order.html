@@ -1,0 +1,88 @@
+{% extends 'base/base.html' %}
+{% load thumbnail %}
+{% block content %}
+    <section id="cart_items">
+        <div class="container">
+            <div class="breadcrumbs">
+                <ol class="breadcrumb">
+                    <li><a href="{% url 'portal:home' %}">خانـه</a></li>
+                    <li class="active">لیست سفارشات</li>
+                </ol>
+            </div><!--/breadcrums-->
+            {% if order != None and details|length > 0 %}
+                <div class="table-responsive cart_info">
+                    <table class="table table-condensed">
+                        <thead>
+                        <tr class="cart_menu">
+                            <td class="image">تصویر</td>
+                            <td class="description">شناسه کالکشن</td>
+                            <td class="description">شناسه محصول</td>
+                            <td class="price">تعداد قطعات</td>
+                            <td class="quantity">رنگ</td>
+                            <td class="total">تکنیک</td>
+                            <td class="total">تعداد</td>
+                            <td></td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for detail in details %}
+                            <tr>
+                                <td class="cart_product">
+                                    <a href="">
+                                        {% thumbnail detail.product.image "110x110" crop="center" as im %}
+                                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                                        {% endthumbnail %}
+                                    </a>
+                                </td>
+                                <td class="cart_description">
+                                    <p>{{ detail.product.collection_to_str }}</p>
+                                </td>
+                                <td class="cart_description">
+                                    <p>شناسـه : {{ detail.product.slug }}</p>
+                                </td>
+                                <td class="cart_price">
+                                    <p>{{ detail.product.parts }}</p>
+                                </td>
+                                <td class="cart_quantity">
+                                    <p>{{ detail.product.color }}</p>
+                                </td>
+                                <td class="cart_total">
+                                    <p class="cart_total_price">{{ detail.product.technique }}</p>
+                                </td>
+                                <td class="cart_total">
+                                    <p class="cart_total_price"></p>
+                                </td>
+                                <td class="cart_delete">
+                                    <a class="cart_quantity_delete" href="{% url 'order:remove-order' detail.id %}"><i
+                                            class="fa fa-times"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-warning">
+                    <p>هیچ محصولی انتخاب نشده است</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+    <section id="do_action">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="total_area">
+                        <ul>
+                            <li>تعداد آیتم ها <span>{{ details.count }}</span></li>
+                        </ul>
+                        {#                        <a class="btn btn-default update" href="{% url 'order:export-excel' %}">خروجی اکسل</a>#}
+                        <a class="btn btn-default update" href="{% url 'order:remove-all-order' %}">پاکسازی لیست</a>
+                        <a class="btn btn-default update" href="{% url 'order:export-pdf' %}">خروجی pdf</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'registration/base.html' %}
+{% load crispy_forms_tags %}
+{% block title_meta %}{% block title %}اضافه کردن دسته‌بندی{% endblock %}{% endblock %}
+{% block main %}
+        <div class="col-lg-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title mb-0 float-left">افزودن دسته‌بندی</h3>
+            </div>
+            <div class="card-body">
+                         <form action="" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+                {{ form.title|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 mb-0">
+                {{ form.slug|as_crispy_field }}
+            </div>
+             <div class="form-group col-md-6 mb-0">
+                {{ form.image|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 mb-0">
+                {{ form.status|as_crispy_field }}
+            </div>
+        </div>
+        <button class="btn btn-success">افزودن دسته‌بندی</button>
+    </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}محصولات | پورتال ای جی{% endblock %}
+{% block content %}
+    <section class="section site-portfolio">
+        {% if user.is_authenticated %}
+            <div class="row">
+                <div class="container">
+                    <div class="col-sm-9 padding-right">
+                        <div class="features_items"><!--features_items-->
+                            <h2 class="title text-center">محصولات</h2>
+                            {% for item in object_list %}
+                                {% include 'product/product_component.html' %}
+                            {% endfor %}
+                        </div><!--features_items-->
+                        <div class="row">
+                            <ul class="pagination">
+                                {% if page_obj.has_previous %}
+                                    <li>
+                                        <a href="{% url 'product:search' page_obj.previous_page_number %}?q={{ search }}">«</a>
+                                    </li>
+                                {% endif %}
+                                {% for page in paginator.page_range %}
+                                    <li class="{% if page == page_obj.number %}active{% endif %}"><a
+                                            href="{% url 'product:search' page %}?q={{ search }}">{{ page }}</a></li>
+                                {% endfor %}
+                                {% if page_obj.has_next %}
+                                    <li>
+                                        <a href="{% url 'product:search' page_obj.next_page_number %}?q={{ search }}">»</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% include 'product/cat_component.html' %}
+                </div>
+            </div>
+        {% else %}
+            <div class="col-lg-6 mx-auto">
+                <div class="card card-danger">
+                    <div class="card-header bg-danger ">
+                        <h3 class="card-title text-light mb-0 float-left">EG STYLE</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>برای دیدن محتواهای سایت باید وارد شوید</p>
+                        <a class="btn btn-outline-danger" href="{% url 'account:login' %}">ورود به سایت</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

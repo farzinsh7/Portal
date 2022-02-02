@@ -1,0 +1,41 @@
+<div class="col-sm-3">
+    <div class="left-sidebar">
+        <h2>دسته بندی ها</h2>
+        <div class="panel-group category-products" id="accordian"><!--category-productsr-->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><a href="{% url 'product:product_list' %}">همه</a></h4>
+                </div>
+            </div>
+            {% for cat in category %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><a
+                                href="{% url 'portal:category' cat.slug %}">{{ cat.title }}</a></h4>
+                    </div>
+                </div>
+            {% endfor %}
+        </div><!--/category-productsr-->
+    </div>
+</div>
+
+<div class="col-sm-3">
+    <div class="left-sidebar">
+        <h2>کالکشن ها</h2>
+        <div class="panel-group category-products" id="accordian"><!--category-productsr-->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><a href="{% url 'product:product_list' %}">همه</a></h4>
+                </div>
+            </div>
+            {% for col in collection %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><a
+                                href="{% url 'portal:collection' col.slug %}">{{ col.title }} ({{ col.slug }})</a></h4>
+                    </div>
+                </div>
+            {% endfor %}
+        </div><!--/category-productsr-->
+    </div>
+</div>
