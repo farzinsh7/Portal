@@ -95,51 +95,75 @@ class Login(LoginView):
             return reverse_lazy("account:profile")
 
 
-from django.http import HttpResponse
-from .forms import SignupForm
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.template.loader import render_to_string
-from .tokens import account_activation_token
-from django.core.mail import EmailMessage
 
-
+import random
+import threading
+import time
+from django.shortcuts import redirect
+from django.views.generic import FormView
+from django.contrib.auth import login
+from .forms import SignupForm, OtpForm
+    
+    
 class Register(CreateView):
     form_class = SignupForm
     template_name = 'registration/register.html'
 
+    def delete_code(self):
+        time.sleep(10)
+        self.request.session.pop('code', None)
+        self.request.session.save()
+
     def form_valid(self, form):
-        user = form.save(commit=False)
-        user.is_active = False
-        user.save()
-        current_site = get_current_site(self.request)
-        mail_subject = 'فعالسازی اکانت'
-        message = render_to_string('registration/activate_account.html', {
-            'user': user,
-            'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            'token': account_activation_token.make_token(user),
-        })
-        to_email = form.cleaned_data.get('email')
-        email = EmailMessage(
-            mail_subject, message, to=[to_email]
-        )
-        email.send()
-        return HttpResponse('لطفا برا تکمیل عملیات ثبت نام ایمیل خود را تایید کنید.')
+        self.request.session['user_data'] = form.cleaned_data
+        self.request.session.save()
+
+        # Generate and store OTP code in session
+        code = random.randint(1000, 10000)
+        self.request.session['code'] = code
+        
+        # Example: send OTP code via SMS here
+        
+        print(f"OTP Code: {code}")
+        tr1 = threading.Thread(target=self.delete_code)
+        tr1.start()
+
+        return redirect("otp-verify")
 
 
-def activate(request, uidb64, token):
-    try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
-        user.save()
-        # login(request, user)
-        # return redirect('home')
-        return HttpResponse('ایمیل شما تایید شد. برای ورد <a href="/login">کلیک </a>کنید.')
-    else:
-        return HttpResponse('لینک فعالسازی نامعتبر است! <a href="/register">دوباره امتحان کنید</a>')
+
+
+class OtpVerifyView(FormView):
+    template_name = "registration/otp.html"
+    form_class = OtpForm
+    success_url = reverse_lazy("account:dashboard")
+
+    def form_valid(self, form):
+        code = self.request.POST['otp_code']
+        
+        if self.request.session.get('code') and int(code) == self.request.session['code']:
+            # Retrieve user data from session
+            user_data = self.request.session.get('user_data')
+            if user_data:
+                # Remove password1 and password2, then handle password properly
+                password = user_data.pop('password1')
+                user_data.pop('password2', None)
+                
+                # Create the user instance
+                user = User(**user_data)
+                user.is_author = True
+                user.set_password(password)  # Set the user's password securely
+                user.save()
+                
+                # Log the user in
+                login(self.request, user)
+                
+                # Clear session data after successful user creation
+                self.request.session.pop('user_data', None)
+                self.request.session.pop('code', None)
+
+            return redirect(self.success_url)
+        else:
+            print(self.request.session.get('code'))
+            return redirect(reverse_lazy("portal:home"))
+

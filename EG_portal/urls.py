@@ -17,7 +17,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from account.views import Login, Register, activate
+from account.views import Login, Register, OtpVerifyView
 
 urlpatterns = [
     path('', include('portal.urls')),
@@ -26,7 +26,7 @@ urlpatterns = [
     path('', include('django.contrib.auth.urls')),
     path('login/', Login.as_view(), name='login'),
     path('register/', Register.as_view(), name='register'),
-    path('activate/<slug:uidb64>/<slug:token>/', activate, name='activate'),
+    path('otp-verify/', OtpVerifyView.as_view(), name="otp-verify"),
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
 ]

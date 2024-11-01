@@ -27,3 +27,7 @@ class SignupForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'phone', 'password1', 'password2')
+        
+        
+class OtpForm(forms.Form):
+    otp_code = forms.CharField(max_length=4)
