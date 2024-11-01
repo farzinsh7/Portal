@@ -103,6 +103,8 @@ from django.shortcuts import redirect
 from django.views.generic import FormView
 from django.contrib.auth import login
 from .forms import SignupForm, OtpForm
+from django.contrib import messages
+
     
     
 class Register(CreateView):
@@ -142,28 +144,37 @@ class OtpVerifyView(FormView):
         code = self.request.POST['otp_code']
         
         if self.request.session.get('code') and int(code) == self.request.session['code']:
-            # Retrieve user data from session
+            # Process the user data as before
             user_data = self.request.session.get('user_data')
             if user_data:
-                # Remove password1 and password2, then handle password properly
                 password = user_data.pop('password1')
                 user_data.pop('password2', None)
                 
-                # Create the user instance
                 user = User(**user_data)
                 user.is_author = True
-                user.set_password(password)  # Set the user's password securely
+                user.set_password(password)
                 user.save()
                 
-                # Log the user in
                 login(self.request, user)
                 
-                # Clear session data after successful user creation
                 self.request.session.pop('user_data', None)
                 self.request.session.pop('code', None)
 
             return redirect(self.success_url)
         else:
-            print(self.request.session.get('code'))
-            return redirect(reverse_lazy("portal:home"))
+            messages.error(self.request, "The OTP code is incorrect. Please try again.")
+            return redirect("otp-verify")
 
+    def post(self, request, *args, **kwargs):
+        if "resend_otp" in request.POST:
+            # Resend OTP logic
+            new_code = random.randint(1000, 10000)
+            request.session['code'] = new_code
+            
+            # Here you can send the new OTP via SMS or email
+            print(f"New OTP Code: {new_code}")
+
+            messages.success(request, "A new OTP code has been sent.")
+            return self.get(request, *args, **kwargs)  # Reload the page
+
+        return super().post(request, *args, **kwargs)

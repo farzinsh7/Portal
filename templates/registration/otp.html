@@ -56,16 +56,16 @@
 					</span>
                 <span class="login100-form-title p-b-48">
 						<img width="150" src="{% static 'img/logo.svg' %}" alt="">
-					</span>
+				</span>
+                {% if messages %}
+                    <div class="alert alert-danger text-center" role="alert">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
                 <div class="wrap-input100 ">
                     {{ form.otp_code|add_class:"input100" }}
-                    {% if form.otp_code.errors %}
-                        <div class="alert alert-danger text-center" role="alert">
-                            {% for error in form.otp_code.errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
                     <span class="focus-input100" data-placeholder="کد ارسال شده"></span>
                 </div>
                 
@@ -77,6 +77,16 @@
                         </button>
                     </div>
                 </div>
+            </form>
+            <form class="login100-form validate-form" method="post">
+                {% csrf_token %}
+                <div class="container-login100-form-btn">
+                    <div class="wrap-login100-form-btn">
+                        <div class="login100-form-bgbtn"></div>
+                        <button type="submit" class="login100-form-btn"  name="resend_otp">Resend OTP</button>
+                    </div>
+                </div>
+                
             </form>
         </div>
     </div>
