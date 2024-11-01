@@ -79,6 +79,17 @@
                     {% endif %}
                     <span class="focus-input100" data-placeholder="ایمیل"></span>
                 </div>
+                <div class="wrap-input100 ">
+                    {{ form.phone|add_class:"input100" }}
+                    {% if form.phone.errors %}
+                        <div class="alert alert-danger text-center" role="alert">
+                            {% for error in form.phone.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <span class="focus-input100" data-placeholder="شماره همراه"></span>
+                </div>
 
                 <div class="wrap-input100 ">
 						<span class="btn-show-pass">

@@ -13,11 +13,12 @@ class ProfileForms(forms.ModelForm):
         if not user.is_superuser:
             self.fields['username'].disabled = True
             self.fields['email'].disabled = True
+            self.fields['phone'].disabled = True
             self.fields['is_author'].disabled = True
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'is_author']
+        fields = ['username', 'first_name', 'last_name', 'email', 'phone', 'is_author']
 
 
 class SignupForm(UserCreationForm):
@@ -25,4 +26,4 @@ class SignupForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('username', 'email', 'phone', 'password1', 'password2')
