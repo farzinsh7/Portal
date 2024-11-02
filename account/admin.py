@@ -7,6 +7,7 @@ UserAdmin.fieldsets[2][1]['fields'] = (
     'is_staff',
     'is_author',
     'is_superuser',
+    'phone',
     'groups',
     'user_permissions'
 )

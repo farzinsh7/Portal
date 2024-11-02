@@ -104,12 +104,37 @@ from django.views.generic import FormView
 from django.contrib.auth import login
 from .forms import SignupForm, OtpForm
 from django.contrib import messages
+from melipayamak import Api
+from decouple import config
 
+
+
+class OTPService:
+    def __init__(self):
+        self.username = config('USERNAME_PANEL')
+        self.password = config('PASSWORD_PANEL')
+        self._from = config('FROM_PANEL')
+        self.api = Api(self.username, self.password)
+        
+    def generate_code(self):
+        return random.randint(1000, 9999)
     
+    def send_otp(self, phone_number, code):
+        sms = self.api.sms()
+        text = f"OTP Code: {code}"
+        response = sms.send(to=phone_number, _from=self._from, text=text)
+        print(response)
+        return response
+    
+
     
 class Register(CreateView):
     form_class = SignupForm
     template_name = 'registration/register.html'
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.otp_service = OTPService()
 
     def delete_code(self):
         time.sleep(10)
@@ -120,13 +145,15 @@ class Register(CreateView):
         self.request.session['user_data'] = form.cleaned_data
         self.request.session.save()
 
-        # Generate and store OTP code in session
-        code = random.randint(1000, 10000)
+        code = self.otp_service.generate_code()
         self.request.session['code'] = code
+
+        to = str(self.request.session['user_data']['phone'])
         
-        # Example: send OTP code via SMS here
-        
-        print(f"OTP Code: {code}")
+
+        self.otp_service.send_otp(phone_number=to, code=code)
+
+
         tr1 = threading.Thread(target=self.delete_code)
         tr1.start()
 
@@ -134,11 +161,16 @@ class Register(CreateView):
 
 
 
-
 class OtpVerifyView(FormView):
     template_name = "registration/otp.html"
     form_class = OtpForm
     success_url = reverse_lazy("account:dashboard")
+    
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Initialize OTPService
+        self.otp_service = OTPService()
 
     def form_valid(self, form):
         code = self.request.POST['otp_code']
@@ -168,11 +200,18 @@ class OtpVerifyView(FormView):
     def post(self, request, *args, **kwargs):
         if "resend_otp" in request.POST:
             # Resend OTP logic
-            new_code = random.randint(1000, 10000)
-            request.session['code'] = new_code
+            code = random.randint(1000, 10000)
+            request.session['code'] = code
             
-            # Here you can send the new OTP via SMS or email
-            print(f"New OTP Code: {new_code}")
+            # Generate and store OTP code in session
+            code = self.otp_service.generate_code()
+            self.request.session['code'] = code
+
+            # Get the phone number from session user data
+            to = str(self.request.session['user_data']['phone'])
+            
+            # Send OTP
+            self.otp_service.send_otp(phone_number=to, code=code)
 
             messages.success(request, "A new OTP code has been sent.")
             return self.get(request, *args, **kwargs)  # Reload the page
