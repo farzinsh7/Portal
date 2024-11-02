@@ -1,0 +1,3 @@
+USERNAME_PANEL = 'username'
+PASSWORD_PANEL = 'password'
+FROM_PANEL = 'number'
